@@ -1,0 +1,16 @@
+zookeeper:
+  image: manukoli1986/zookeeper:v1
+  ports:
+   - "2181:2181"
+   - "2888:2888"
+   - "3888:3888"
+   - "5000:5000"
+
+kafka:
+  image: kafkacluster:v3
+  ports:
+    - "9092:9092"
+  links:
+    - zookeeper:zookeeper
+  volumes:
+    - ./image/conf:/opt/kafka/config
