@@ -16,10 +16,12 @@ spec:
     spec:
       containers:
       - name: kafka
-        image:kafkacluster:v3
+        image: manukoli1986/kafkacluster:v3
         ports:
         - containerPort: 9092
-
+        volumeMounts:
+        - name: kafka-config
+          mountPath: /opt/kafka/config
       - name: zookeeper
         image: manukoli1986/zookeeper:v1
         ports:
@@ -27,19 +29,25 @@ spec:
         - containerPort: 2888
         - containerPort: 3888
         - containerPort: 5000
+      volumes:
+        - name: kafka-config
+          configMap:
+            name: kafka-config
 ---
 apiVersion: v1 
 kind: Service 
 metadata: 
-  labels: 
-    app: kafkaApp 
-  name: kafka 
+  name: kafkacluster
+  labels:
+    name: kafkacluster
 spec: 
   ports: 
   - port: 9092 
     targetPort: 9092 
+    name: kafka-port
   - port: 2181 
     targetPort: 2181 
+    name: zookeeper-port
   selector: 
-    app: kafkaApp 
+    name: kafkacluster 
   type: LoadBalancer 

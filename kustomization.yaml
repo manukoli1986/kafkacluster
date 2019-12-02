@@ -1,0 +1,4 @@
+configMapGenerator:
+- name: kafka-config
+  files:
+  - image/conf/server.properties
