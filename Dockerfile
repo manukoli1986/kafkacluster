@@ -13,7 +13,7 @@ ENV PATH /opt/kafka/bin:$PATH
 #ENTRYPOINT ["/docker-entrypoint.sh"]
 RUN rm -rf kafka_2.11-2.3.1.tgz 
 COPY ./image/conf /opt/kafka/config
-VOLUME ["/opt/kafka/config"]
+#VOLUME ["/opt/kafka/config"]
 
 EXPOSE 9092
 
