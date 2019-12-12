@@ -15,24 +15,48 @@ spec:
         name: kafkacluster
     spec:
       containers:
-      - name: kafka
-        image: manukoli1986/kafkacluster:v3
-        ports:
-        - containerPort: 9092
-        volumeMounts:
-        - name: kafka-config
-          mountPath: /opt/kafka/config
       - name: zookeeper
-        image: manukoli1986/zookeeper:v1
+        image: confluentinc/cp-zookeeper:latest
         ports:
         - containerPort: 2181
         - containerPort: 2888
         - containerPort: 3888
         - containerPort: 5000
-      volumes:
-        - name: kafka-config
-          configMap:
-            name: kafka-config
+        env:
+        - name: ZOOKEEPER_SERVER_ID
+          value: "1"
+        - name: ZOOKEEPER_CLIENT_PORT
+          value: "2181"
+        - name: ZOOKEEPER_TICK_TIME
+          value: "2000"
+        - name: ZOOKEEPER_INIT_LIMIT
+          value: "5"
+        - name: ZOOKEEPER_SYNC_LIMIT
+          value: "2"
+        - name: ZOOKEEPER_SERVERS
+          value: "localhost:2888:3888"
+#        volumeMounts:
+#        - name: kafka-config
+#          mountPath: /opt/kafka/config
+      - name: kafka
+        image: confluentinc/cp-kafka:latest
+        ports:
+        - containerPort: 9092
+        env:
+        - name: KAFKA_BROKER_ID
+          value: "1"
+        - name: KAFKA_ZOOKEEPER_CONNECT
+          value: "localhost:2181"
+        - name: KAFKA_ADVERTISED_LISTENERS
+          value: "PLAINTEXT://0.0.0.0:9092"
+        - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+          value: "1"
+#        - name: kafka_log_dirs
+#          value: ./KAFKA-LOGS/
+#      volumes:
+#        - name: kafka-config
+#          configMap:
+#            name: kafka-config
 ---
 apiVersion: v1 
 kind: Service 
@@ -45,9 +69,6 @@ spec:
   - port: 9092 
     targetPort: 9092 
     name: kafka-port
-  - port: 2181 
-    targetPort: 2181 
-    name: zookeeper-port
   selector: 
     name: kafkacluster 
   type: LoadBalancer 
