@@ -38,22 +38,22 @@ spec:
 #        volumeMounts:
 #        - name: kafka-config
 #          mountPath: /opt/kafka/config
-      - name: kafka
+      - name: kafka1
         image: confluentinc/cp-kafka:latest
         ports:
         - containerPort: 9092
         env:
         - name: KAFKA_BROKER_ID
-          value: "1"
+          value: "0"
         - name: KAFKA_ZOOKEEPER_CONNECT
           value: "localhost:2181"
+        - name: KAFKA_ADVERTISED_HOST_NAME
+          value: "192.168.99.106"          
         - name: KAFKA_ADVERTISED_LISTENERS
           value: "PLAINTEXT://localhost:9092"
         - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
           value: "1"
-#        - name: kafka_log_dirs
-#          value: ./KAFKA-LOGS/
-#      volumes:
+
 ---
 apiVersion: v1 
 kind: Service 
@@ -72,3 +72,5 @@ spec:
   selector: 
     name: kafkacluster 
   type: LoadBalancer 
+#    externalIPs:
+#    - 172.31.25.198
