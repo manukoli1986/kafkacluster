@@ -70,6 +70,7 @@ spec:
         - --config.file=/etc/prometheus/prometheus.yml
         - --storage.tsdb.path=/prometheus
         - --storage.tsdb.retention=24h
+        - --web.enable-lifecycle
         command:
         - /bin/prometheus
         image: quay.io/prometheus/prometheus:v2.0.0
