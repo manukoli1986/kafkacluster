@@ -1,0 +1,14 @@
+ansible - 
+
+
+- name: Installing 
+  become: yes
+  yum:
+    update_cache: yes
+    name: "{{item}}"
+    state: present
+  with_itmes:
+    - jenkins
+    - python-pip
+    - npm
+    - python-dev
